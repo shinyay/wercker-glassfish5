@@ -1,6 +1,10 @@
 ## OracleLinux for Installation OpenJDK 8
 build:
-  box: store/oracle/serverjre:8
+  box:
+    id: store/oracle/serverjre:8
+    username: $DOCKERID
+    password: $DOCKERPWD
+    tag: latest
   steps:
     - script:
         name: post-install-check
