@@ -1,10 +1,10 @@
 ## OracleLinux for Installation OpenJDK 8
 build:
   box:
-    id: store/oracle/serverjre:8
+    id: docker pull shinyay/docker-mvn-jdk8
     username: $DOCKERID
     password: $DOCKERPWD
-    tag: latest
+    tag: 3.5.0
   steps:
     - script:
         name: post-install-check
