@@ -1,7 +1,7 @@
 ## OracleLinux for Installation OpenJDK 8
 build:
   box:
-    id: docker pull shinyay/docker-mvn-jdk8
+    id: shinyay/docker-mvn-jdk8
     username: $DOCKERID
     password: $DOCKERPWD
     tag: 3.5.0
