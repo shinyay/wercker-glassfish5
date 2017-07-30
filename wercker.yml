@@ -1,7 +1,7 @@
-
 ## OracleLinux for Installation OpenJDK 8
 build:
   box: store/oracle/serverjre:8
+  steps:
     - script:
         name: post-install-check
         code: |
