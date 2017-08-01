@@ -13,6 +13,43 @@ build:
           java -version
           echo "[env]"
           env
+    - script:
+        name: install-package-for-glassfish
+        code: |
+          echo "export GLASSFISH_HOME=/glassfish5" >> /root/.bashrc
+          echo "export PATH=$PATH:/glassfish5/bin" >> /root/.bashrc
+          source /root/.bashrc
+          yum install -y wget unzip
+          if [ -z "${GF_VERSION}" ]; then
+            GF_TARGET=latest-glassfish.zip
+          else
+            GF_TARGET=glassfish-${GF_VERSION}.zip
+          fi
+          wget -q --no-check-certificate http://download.oracle.com/glassfish/5.0/promoted/${GF_TARGET}
+          ls -l
+          unzip -o -d / ${GF_TARGET}
+          rm -f ${GF_TARGET}
+          echo "----- CREATE PASSWORD FILE --------------------" && \
+          echo "AS_ADMIN_PASSWORD=" > /tmp/gfpassword && \
+          echo "AS_ADMIN_NEWPASSWORD=${GF_PASSWORD}" >> /tmp/gfpassword  && \
+          echo "----- CHANGE ADMIN PASSWORD AND SECURE ADMIN ACCESS --------------------" && \
+          asadmin --user=admin --passwordfile=/tmp/gfpassword change-admin-password --domain_name domain1 && \
+          echo "----- ENABLE DOMAIN ADMINISTRATION SERVER --------------------" && \
+          asadmin start-domain && \
+          echo "AS_ADMIN_PASSWORD=${GF_PASSWORD}" > /tmp/gfpassword && \
+          asadmin --user=admin --passwordfile=/tmp/gfpassword enable-secure-admin && \
+          asadmin --user=admin stop-domain
+          cp shell/start-domain.sh /root && \
+          chmod +x /root/start-domain.sh
+    - internal/docker-push:
+         username: $DOCKERID
+         password: $DOCKERPWD
+         repository: shinyay/oraclelinux7-oraclejdk8-glassfish5
+         tag: latest $GF_VERSION
+         author: shinyay
+         working-dir: /root
+         ports: 4848 8080 8181
+         cmd: /bin/bash --login
 ## CentOS for Installation OpenJDK 8
 build-centos-gf:
   box: centos
