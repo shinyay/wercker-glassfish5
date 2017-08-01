@@ -27,7 +27,7 @@ build:
           fi
           curl -s --insecure http://download.oracle.com/glassfish/5.0/promoted/${GF_TARGET} -o ${GF_TARGET}
           ls -l
-          unzip -o -d / ${GF_TARGET}
+          unzip -qq -o -d / ${GF_TARGET}
           rm -f ${GF_TARGET}
           echo "----- CREATE PASSWORD FILE --------------------" && \
           echo "AS_ADMIN_PASSWORD=" > /tmp/gfpassword && \
